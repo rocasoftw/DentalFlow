@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '../../context/AppContext.tsx';
 
 interface HeaderProps {
     sidebarOpen: boolean;

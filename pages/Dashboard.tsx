@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/AppContext.tsx';
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {

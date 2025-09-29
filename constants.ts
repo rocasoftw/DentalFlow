@@ -1,5 +1,5 @@
 
-import type { User, Patient, Treatment, DentalState, ToothCondition, Appointment } from './types';
+import type { User, Patient, Treatment, DentalState, ToothCondition, Appointment } from './types.ts';
 
 export const MOCK_USERS: User[] = [
   { id: '1', name: 'Admin', email: 'admin@dentalflow.com', role: 'admin', password: '1234' },

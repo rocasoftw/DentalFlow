@@ -1,8 +1,8 @@
 // Fix: Moved all context logic here from types.ts and fixed bugs.
 import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import type { User, Patient, Treatment, Appointment } from '../types';
-import { MOCK_PATIENTS, AVAILABLE_TREATMENTS, MOCK_APPOINTMENTS, MOCK_USERS } from '../constants';
-import { db } from '../data/db';
+import type { User, Patient, Treatment, Appointment } from '../types.ts';
+import { MOCK_PATIENTS, AVAILABLE_TREATMENTS, MOCK_APPOINTMENTS, MOCK_USERS } from '../constants.ts';
+import { db } from '../data/db.ts';
 
 interface AppState {
   isLoading: boolean;

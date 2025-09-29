@@ -9,11 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.1",
-    "react": "^19.1.1",
-    "recharts": "^3.2.1",
-    "dexie": "^4.0.7"
+    "react": "18.2.0",
+    "react-router-dom": "6.23.1",
+    "recharts": "2.12.7",
+    "dexie": "4.0.7"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

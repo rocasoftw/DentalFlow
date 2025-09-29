@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { DentalState, ToothCondition, ToothState } from '../types';
+import type { DentalState, ToothCondition, ToothState } from '../types.ts';
 
 interface OdontogramProps {
   dentalState: DentalState;
