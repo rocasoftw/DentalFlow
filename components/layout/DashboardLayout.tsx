@@ -1,8 +1,6 @@
-
-
 import React, { useState } from 'react';
-import Header from './Header.tsx';
-import Sidebar from './Sidebar.tsx';
+import Header from './Header.js';
+import Sidebar from './Sidebar.js';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -1,9 +1,7 @@
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext.tsx';
-import { ToothIcon } from '../components/icons/ToothIcon.tsx';
+import { useAppContext } from '../context/AppContext.js';
+import { ToothIcon } from '../components/icons/ToothIcon.js';
 
 const Login: React.FC = () => {
   const { state, dispatch } = useAppContext();

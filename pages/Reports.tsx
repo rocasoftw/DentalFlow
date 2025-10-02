@@ -1,8 +1,7 @@
-
 import React, { useState, useMemo } from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/AppContext.js';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import type { BillingRecord } from '../types';
+import type { BillingRecord } from '../types.ts';
 
 const Reports: React.FC = () => {
     const { state } = useAppContext();
@@ -123,7 +122,8 @@ const Reports: React.FC = () => {
                                 fill="#8884d8"
                                 dataKey="value"
                                 nameKey="name"
-                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                // FIX: The 'percent' prop from recharts can be undefined. Added a check to prevent a TypeError during arithmetic operations, while correctly handling a value of 0.
+                                label={({ name, percent }) => (percent != null ? `${name} ${(percent * 100).toFixed(0)}%` : name)}
                             >
                                 {treatmentsCount.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

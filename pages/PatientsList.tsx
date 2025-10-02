@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext.tsx';
+import { useAppContext } from '../context/AppContext.js';
 import { db } from '../data/db.ts';
-import ConfirmationModal from '../components/ConfirmationModal.tsx';
+import ConfirmationModal from '../components/ConfirmationModal.js';
 import type { Patient, User } from '../types.ts';
 
 type SortablePatientKeys = keyof Patient | 'fullName' | 'dentistName';

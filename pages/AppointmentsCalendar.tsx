@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useAppContext } from '../context/AppContext';
-import type { Appointment, Patient } from '../types';
+import { useAppContext } from '../context/AppContext.js';
+import type { Appointment, Patient } from '../types.ts';
 import { Link } from 'react-router-dom';
-import { db } from '../data/db';
-import ConfirmationModal from '../components/ConfirmationModal';
+import { db } from '../data/db.ts';
+import ConfirmationModal from '../components/ConfirmationModal.js';
 
 const formatDate = (date: Date | string, options: Intl.DateTimeFormatOptions): string => {
     return new Date(date).toLocaleDateString('es-ES', options);

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { ToothIcon } from '../icons/ToothIcon.tsx';
-import { useAppContext } from '../../context/AppContext.tsx';
+import { ToothIcon } from '../icons/ToothIcon.js';
+import { useAppContext } from '../../context/AppContext.js';
 
 interface SidebarProps {
     sidebarOpen: boolean;

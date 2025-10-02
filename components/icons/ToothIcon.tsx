@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const ToothIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
