@@ -1,12 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../context/AppContext.js';
 
-interface HeaderProps {
-    sidebarOpen: boolean;
-    setSidebarOpen: (open: boolean) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
+const Header = ({ sidebarOpen, setSidebarOpen }) => {
     const { state, dispatch } = useAppContext();
     const { currentUser } = state;
 

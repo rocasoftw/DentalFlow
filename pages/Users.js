@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext.js';
-import type { User } from '../types.js';
 import { db } from '../data/db.js';
 import ConfirmationModal from '../components/ConfirmationModal.js';
 
-const Users: React.FC = () => {
+const Users = () => {
   const { state, dispatch } = useAppContext();
   const { users, currentUser } = state;
 
@@ -15,20 +14,20 @@ const Users: React.FC = () => {
   });
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddUser = async (e: React.FormEvent) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
     if(users.some(u => u.email === formData.email)) {
         setError('El email ya está en uso.');
         return;
     }
     setError('');
-    const newUser: User = {
+    const newUser = {
       id: `u${Date.now()}`,
       ...formData,
       role: 'dentist',
@@ -44,7 +43,7 @@ const Users: React.FC = () => {
     }
   };
 
-  const handleDeleteUser = (userId: string) => {
+  const handleDeleteUser = (userId) => {
     if (currentUser?.id === userId) {
         alert("No puede eliminar su propia cuenta de administrador.");
         return;

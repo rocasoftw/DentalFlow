@@ -1,12 +1,11 @@
 
-import type { User, Patient, Treatment, DentalState, ToothCondition, Appointment } from './types.js';
 
-export const MOCK_USERS: User[] = [
+export const MOCK_USERS = [
   { id: '1', name: 'Admin', email: 'admin@dentalflow.com', role: 'admin', password: '1234' },
   { id: '2', name: 'Dr. Elena García', email: 'dentist@dentalflow.com', role: 'dentist', password: 'password' },
 ];
 
-export const AVAILABLE_TREATMENTS: Treatment[] = [
+export const AVAILABLE_TREATMENTS = [
   { id: 't1', name: 'Limpieza Dental', cost: 50 },
   { id: 't2', name: 'Obturación (Empaste)', cost: 80 },
   { id: 't3', name: 'Endodoncia', cost: 250 },
@@ -17,9 +16,9 @@ export const AVAILABLE_TREATMENTS: Treatment[] = [
   { id: 't-other', name: 'Otros', cost: 0 },
 ];
 
-const generateRandomDentalState = (): DentalState => {
-  const state: DentalState = {};
-  const conditions: ToothCondition[] = ['healthy', 'caries', 'restoration', 'missing'];
+const generateRandomDentalState = () => {
+  const state = {};
+  const conditions = ['healthy', 'caries', 'restoration', 'missing'];
   const teeth = [
     ...Array.from({ length: 8 }, (_, i) => 11 + i),
     ...Array.from({ length: 8 }, (_, i) => 21 + i),
@@ -41,7 +40,7 @@ const generateRandomDentalState = (): DentalState => {
   return state;
 };
 
-export const MOCK_PATIENTS: Patient[] = [
+export const MOCK_PATIENTS = [
   {
     id: 'p1',
     dentistId: '2',
@@ -118,7 +117,7 @@ export const MOCK_PATIENTS: Patient[] = [
   },
 ];
 
-export const MOCK_APPOINTMENTS: Appointment[] = [
+export const MOCK_APPOINTMENTS = [
     {
         id: 'apt1',
         patientId: 'p1',
@@ -155,7 +154,7 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
 
 
 // FIX: Added missing properties to satisfy the ToothCondition type.
-export const CONDITION_COLORS: { [key in ToothCondition]: string } = {
+export const CONDITION_COLORS = {
   healthy: 'fill-white',
   caries: 'fill-red-500',
   restoration: 'fill-blue-500',

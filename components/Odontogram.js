@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import type { DentalState, ToothCondition, ToothState } from '../types.js';
 
-interface OdontogramProps {
-  dentalState: DentalState;
-  onToothFaceClick: (toothNumber: number, face: string, condition: ToothCondition) => void;
-}
-
-const ODONTOGRAM_CONDITIONS: { [key: string]: { label: string; color: string; symbol?: string } } = {
+const ODONTOGRAM_CONDITIONS = {
   healthy: { label: 'Sano', color: 'fill-white' },
   restoration: { label: 'Obturado', color: 'fill-blue-500' },
   caries: { label: 'Caries', color: 'fill-red-500' },
@@ -19,9 +13,7 @@ const ODONTOGRAM_CONDITIONS: { [key: string]: { label: string; color: string; sy
   fracture: { label: 'Fractura', color: 'fill-pink-500' },
 };
 
-type OdontogramConditionKey = keyof typeof ODONTOGRAM_CONDITIONS;
-
-const Tooth: React.FC<{ number: number; state?: ToothState; onClick: (face: string) => void; textPosition: 'top' | 'bottom' }> = ({ number, state, onClick, textPosition }) => {
+const Tooth = ({ number, state, onClick, textPosition }) => {
     const C = 20; // Center
     const R = 18; // Outer Radius
     const r = 8;  // Inner Radius
@@ -52,7 +44,7 @@ const Tooth: React.FC<{ number: number; state?: ToothState; onClick: (face: stri
         distal: `M ${pSW_r.x},${pSW_r.y} L ${pSW_R.x},${pSW_R.y} A ${R},${R} 0 0 1 ${pNW_R.x},${pNW_R.y} L ${pNW_r.x},${pNW_r.y} A ${r},${r} 0 0 0 ${pSW_r.x},${pSW_r.y} Z`,
     };
 
-    const wholeToothCondition = state?.occlusal?.condition as OdontogramConditionKey;
+    const wholeToothCondition = state?.occlusal?.condition;
     const conditionInfo = ODONTOGRAM_CONDITIONS[wholeToothCondition];
     const textY = textPosition === 'top' ? -8 : (2*C) + 18;
 
@@ -81,8 +73,8 @@ const Tooth: React.FC<{ number: number; state?: ToothState; onClick: (face: stri
                   <path
                       key={face}
                       d={pathD}
-                      onClick={(e: React.MouseEvent) => { e.stopPropagation(); onClick(face); }}
-                      className={`${(ODONTOGRAM_CONDITIONS[state?.[face as keyof ToothState]?.condition as OdontogramConditionKey] || ODONTOGRAM_CONDITIONS.healthy).color} stroke-gray-700 stroke-1 group-hover:stroke-primary-500 transition-all`}
+                      onClick={(e) => { e.stopPropagation(); onClick(face); }}
+                      className={`${(ODONTOGRAM_CONDITIONS[state?.[face]?.condition] || ODONTOGRAM_CONDITIONS.healthy).color} stroke-gray-700 stroke-1 group-hover:stroke-primary-500 transition-all`}
                   />
               )}
             </g>
@@ -90,10 +82,10 @@ const Tooth: React.FC<{ number: number; state?: ToothState; onClick: (face: stri
     );
 };
 
-const Odontogram: React.FC<OdontogramProps> = ({ dentalState, onToothFaceClick }) => {
-    const [selected, setSelected] = useState<{ tooth: number; face: string } | null>(null);
-    const [condition, setCondition] = useState<OdontogramConditionKey>('healthy');
-    const [view, setView] = useState<'adult' | 'child'>('adult');
+const Odontogram = ({ dentalState, onToothFaceClick }) => {
+    const [selected, setSelected] = useState(null);
+    const [condition, setCondition] = useState('healthy');
+    const [view, setView] = useState('adult');
     
     const TOOTH_WIDTH = 45;
 
@@ -111,7 +103,7 @@ const Odontogram: React.FC<OdontogramProps> = ({ dentalState, onToothFaceClick }
         q8: [85, 84, 83, 82, 81],
     };
 
-    const renderQuadrant = (numbers: number[], textPos: 'top' | 'bottom') => 
+    const renderQuadrant = (numbers, textPos) => 
         numbers.map((num, index) => (
             <g key={num} transform={`translate(${index * TOOTH_WIDTH}, 0)`}>
                 <Tooth 
@@ -125,7 +117,7 @@ const Odontogram: React.FC<OdontogramProps> = ({ dentalState, onToothFaceClick }
 
     const handleSaveCondition = () => {
         if (selected) {
-            onToothFaceClick(selected.tooth, selected.face, condition as ToothCondition);
+            onToothFaceClick(selected.tooth, selected.face, condition);
             setSelected(null);
         }
     };
@@ -176,7 +168,7 @@ const Odontogram: React.FC<OdontogramProps> = ({ dentalState, onToothFaceClick }
                     <div className="flex items-center space-x-4 mt-3">
                         <select
                             value={condition}
-                            onChange={(e) => setCondition(e.target.value as OdontogramConditionKey)}
+                            onChange={(e) => setCondition(e.target.value)}
                             className="block w-full max-w-xs pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
                         >
                             {Object.entries(ODONTOGRAM_CONDITIONS).map(([key, { label }]) => (

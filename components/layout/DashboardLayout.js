@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from './Header.js';
 import Sidebar from './Sidebar.js';
 
-const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const DashboardLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     return (
         <div className="flex h-screen overflow-hidden">

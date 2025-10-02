@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../context/AppContext.js';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import type { BillingRecord } from '../types.js';
 
-const Reports: React.FC = () => {
+const Reports = () => {
     const { state } = useAppContext();
     const { patients, treatments } = state;
 
@@ -12,7 +11,7 @@ const Reports: React.FC = () => {
         end: new Date().toISOString().split('T')[0]
     });
 
-    const allBillingRecords: BillingRecord[] = useMemo(() => patients.flatMap(p => p.billingRecords), [patients]);
+    const allBillingRecords = useMemo(() => patients.flatMap(p => p.billingRecords), [patients]);
 
     const filteredRecords = useMemo(() => {
         const startDate = new Date(dateRange.start);
@@ -28,7 +27,7 @@ const Reports: React.FC = () => {
     const totalIncome = useMemo(() => filteredRecords.reduce((sum, record) => sum + record.cost, 0), [filteredRecords]);
 
     const incomeByMonth = useMemo(() => {
-        const months: { [key: string]: number } = {};
+        const months = {};
         filteredRecords.forEach(record => {
             const month = new Date(record.date).toLocaleString('default', { month: 'short', year: '2-digit' });
             if (!months[month]) {
@@ -40,7 +39,7 @@ const Reports: React.FC = () => {
     }, [filteredRecords]);
 
     const treatmentsCount = useMemo(() => {
-        const counts: { [key: string]: number } = {};
+        const counts = {};
         filteredRecords.forEach(record => {
             const treatmentName = treatments.find(t => t.id === record.treatmentId)?.name || 'Desconocido';
             if (!counts[treatmentName]) {
@@ -54,7 +53,7 @@ const Reports: React.FC = () => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF4560', '#775DD0'];
 
     const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
         if (!percent) return null;
         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -108,7 +107,7 @@ const Reports: React.FC = () => {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis />
-                            <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                            <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
                             <Legend />
                             <Bar dataKey="income" fill="#8884d8" name="Ingresos" />
                         </BarChart>

@@ -3,25 +3,20 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { ToothIcon } from '../icons/ToothIcon.js';
 import { useAppContext } from '../../context/AppContext.js';
 
-interface SidebarProps {
-    sidebarOpen: boolean;
-    setSidebarOpen: (open: boolean) => void;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const location = useLocation();
     const { pathname } = location;
     const { state } = useAppContext();
     const { currentUser } = state;
 
-    const trigger = useRef<HTMLButtonElement>(null);
-    const sidebar = useRef<HTMLDivElement>(null);
+    const trigger = useRef(null);
+    const sidebar = useRef(null);
 
     // close on click outside
     useEffect(() => {
-        const clickHandler = ({ target }: MouseEvent) => {
+        const clickHandler = ({ target }) => {
             if (!sidebar.current || !trigger.current) return;
-            if (!sidebarOpen || sidebar.current.contains(target as Node) || trigger.current.contains(target as Node)) return;
+            if (!sidebarOpen || sidebar.current.contains(target) || trigger.current.contains(target)) return;
             setSidebarOpen(false);
         };
         document.addEventListener('click', clickHandler);
@@ -30,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     
     // close if the esc key is pressed
     useEffect(() => {
-        const keyHandler = ({ keyCode }: KeyboardEvent) => {
+        const keyHandler = ({ keyCode }) => {
             if (!sidebarOpen || keyCode !== 27) return;
             setSidebarOpen(false);
         };
@@ -38,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         return () => document.removeEventListener('keydown', keyHandler);
     });
 
-    const NavItem: React.FC<{ to: string, children: React.ReactNode }> = ({ to, children }) => {
+    const NavItem = ({ to, children }) => {
         const isActive = pathname === to || (to !== '/' && pathname.startsWith(to));
         return (
             <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${isActive && 'bg-gray-200'}`}>

@@ -11,12 +11,12 @@ import PatientForm from './pages/PatientForm.js';
 import AppointmentsCalendar from './pages/AppointmentsCalendar.js';
 import Users from './pages/Users.js';
 
-const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PrivateRoute = ({ children }) => {
   const { state } = useAppContext();
   return state.isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 };
 
-const AppRoutes: React.FC = () => {
+const AppRoutes = () => {
   const { state } = useAppContext();
 
   return (
@@ -48,7 +48,7 @@ const AppRoutes: React.FC = () => {
   );
 };
 
-const AppContent: React.FC = () => {
+const AppContent = () => {
   const { state } = useAppContext();
 
   if (state.isLoading) {
@@ -70,7 +70,7 @@ const AppContent: React.FC = () => {
 }
 
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <AppProvider>
       <AppContent />

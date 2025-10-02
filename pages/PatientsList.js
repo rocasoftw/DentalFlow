@@ -3,20 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext.js';
 import { db } from '../data/db.js';
 import ConfirmationModal from '../components/ConfirmationModal.js';
-import type { Patient, User } from '../types.js';
 
-type SortablePatientKeys = keyof Patient | 'fullName' | 'dentistName';
-
-const PatientsList: React.FC = () => {
+const PatientsList = () => {
   const { state, dispatch } = useAppContext();
   const { patients, users, currentUser } = state;
   const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [dentistFilter, setDentistFilter] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: SortablePatientKeys, direction: 'ascending' | 'descending' }>({ key: 'lastName', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
+  const [patientToDelete, setPatientToDelete] = useState(null);
 
   const dentists = useMemo(() => users.filter(u => u.role === 'dentist'), [users]);
 
@@ -63,20 +60,20 @@ const PatientsList: React.FC = () => {
 
   }, [patients, users, currentUser, searchTerm, dentistFilter, sortConfig]);
 
-  const requestSort = (key: SortablePatientKeys) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
+  const requestSort = (key) => {
+    let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
   };
   
-  const getSortIcon = (key: SortablePatientKeys) => {
+  const getSortIcon = (key) => {
     if (sortConfig.key !== key) return null;
     return sortConfig.direction === 'ascending' ? '▲' : '▼';
   };
 
-  const handleDeleteClick = (patientId: string) => {
+  const handleDeleteClick = (patientId) => {
     setPatientToDelete(patientId);
     setIsModalOpen(true);
   };
@@ -102,7 +99,7 @@ const PatientsList: React.FC = () => {
     }
   };
 
-  const SortableHeader: React.FC<{label: string; sortKey: SortablePatientKeys; className?: string}> = ({ label, sortKey, className = ''}) => (
+  const SortableHeader = ({ label, sortKey, className = ''}) => (
     <th className={`px-6 py-3 text-xs font-bold text-left text-gray-600 uppercase tracking-wider cursor-pointer ${className}`} onClick={() => requestSort(sortKey)}>
         {label} <span className="text-xs">{getSortIcon(sortKey)}</span>
     </th>

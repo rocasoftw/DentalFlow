@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppContext } from '../context/AppContext.js';
 import { Link } from 'react-router-dom';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { state } = useAppContext();
   const { currentUser, patients } = state;
   

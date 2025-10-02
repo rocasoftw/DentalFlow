@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext.js';
-import type { Patient } from '../types.js';
 import { db } from '../data/db.js';
 
-const FormField: React.FC<{
-    label: string,
-    name: string,
-    type: string,
-    value: string,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    required?: boolean,
-    placeholder?: string
-}> = ({label, name, type, value, onChange, required = true, placeholder = ''}) => (
+const FormField = ({label, name, type, value, onChange, required = true, placeholder = ''}) => (
     <div>
         <label htmlFor={name} className="mb-2 block text-sm font-semibold text-gray-700">{label}</label>
         <input 
@@ -28,13 +19,7 @@ const FormField: React.FC<{
     </div>
 );
 
-const TextAreaField: React.FC<{
-    label: string,
-    name: string,
-    value: string,
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-    placeholder?: string
-}> = ({label, name, value, onChange, placeholder = ''}) => (
+const TextAreaField = ({label, name, value, onChange, placeholder = ''}) => (
     <div className="md:col-span-2">
          <label htmlFor={name} className="mb-2 block text-sm font-semibold text-gray-700">{label}</label>
          <textarea
@@ -50,8 +35,8 @@ const TextAreaField: React.FC<{
 );
 
 
-const PatientForm: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+const PatientForm = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const { state, dispatch } = useAppContext();
     const isEditing = !!id;
@@ -87,11 +72,11 @@ const PatientForm: React.FC = () => {
         }
     }, [id, isEditing, state.patients, navigate]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!state.currentUser) {
             alert("Error: No hay un usuario autenticado.");
@@ -107,7 +92,7 @@ const PatientForm: React.FC = () => {
                     navigate(`/patients/${id}`);
                 }
             } else {
-                const newPatient: Patient = {
+                const newPatient = {
                     id: `p${Date.now()}`,
                     dentistId: state.currentUser.id,
                     ...formData,

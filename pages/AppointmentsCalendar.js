@@ -1,22 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext.js';
-import type { Appointment, Patient } from '../types.js';
 import { Link } from 'react-router-dom';
 import { db } from '../data/db.js';
 import ConfirmationModal from '../components/ConfirmationModal.js';
 
-const formatDate = (date: Date | string, options: Intl.DateTimeFormatOptions): string => {
+const formatDate = (date, options) => {
     return new Date(date).toLocaleDateString('es-ES', options);
 };
 
-const AppointmentModal: React.FC<{
-    isOpen: boolean;
-    onClose: () => void;
-    onSave: (appointment: Omit<Appointment, 'id' | 'dentistId'> & { id?: string }) => void;
-    patients: Patient[];
-    appointment?: Appointment | null;
-    selectedDate: Date;
-}> = ({ isOpen, onClose, onSave, patients, appointment, selectedDate }) => {
+const AppointmentModal = ({ isOpen, onClose, onSave, patients, appointment, selectedDate }) => {
     
     const getInitialFormData = () => {
         if (appointment) {
@@ -46,7 +38,7 @@ const AppointmentModal: React.FC<{
 
     if (!isOpen) return null;
     
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const [hours, minutes] = formData.time.split(':');
         const startDateTime = new Date(formData.date);
@@ -59,7 +51,7 @@ const AppointmentModal: React.FC<{
             start: startDateTime.toISOString(),
             end: startDateTime.toISOString(),
         };
-        onSave(appointmentData as any);
+        onSave(appointmentData);
     };
 
     return (
@@ -129,24 +121,24 @@ const AppointmentModal: React.FC<{
     );
 };
 
-const AppointmentsCalendar: React.FC = () => {
+const AppointmentsCalendar = () => {
     const { state, dispatch } = useAppContext();
     const { appointments, patients, currentUser } = state;
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+    const [editingAppointment, setEditingAppointment] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
+    const [appointmentToDelete, setAppointmentToDelete] = useState(null);
 
     const appointmentsByDate = useMemo(() => {
-        const map = new Map<string, Appointment[]>();
+        const map = new Map();
         appointments.forEach(app => {
             const dateKey = new Date(app.start).toDateString();
             if (!map.has(dateKey)) {
                 map.set(dateKey, []);
             }
-            map.get(dateKey)!.push(app);
+            map.get(dateKey).push(app);
         });
         return map;
     }, [appointments]);
@@ -157,11 +149,11 @@ const AppointmentsCalendar: React.FC = () => {
     const daysInMonth = lastDayOfMonth.getDate();
     const daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-    const changeMonth = (offset: number) => {
+    const changeMonth = (offset) => {
         setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + offset, 1));
     };
     
-    const handleSaveAppointment = async (data: Omit<Appointment, 'id' | 'dentistId'> & { id?: string }) => {
+    const handleSaveAppointment = async (data) => {
         if (!currentUser) {
             alert("Error: no hay un usuario autenticado.");
             return;
@@ -171,15 +163,15 @@ const AppointmentsCalendar: React.FC = () => {
                 const originalAppointment = await db.appointments.get(data.id);
                 if (!originalAppointment) throw new Error("Cita no encontrada");
 
-                const updatedAppointment: Appointment = {
+                const updatedAppointment = {
                     ...originalAppointment,
-                    ...(data as Partial<Appointment>),
+                    ...data,
                 };
                 await db.appointments.put(updatedAppointment);
                 dispatch({ type: 'UPDATE_APPOINTMENT', payload: updatedAppointment });
             } else {
-                const newAppointment: Appointment = {
-                    ...(data as Omit<Appointment, 'id' | 'dentistId'>),
+                const newAppointment = {
+                    ...data,
                     id: `apt${Date.now()}`,
                     dentistId: currentUser.id
                 };
@@ -194,12 +186,12 @@ const AppointmentsCalendar: React.FC = () => {
         }
     };
 
-    const handleEditAppointment = (app: Appointment) => {
+    const handleEditAppointment = (app) => {
         setEditingAppointment(app);
         setIsModalOpen(true);
     };
 
-    const handleDeleteClick = (id: string) => {
+    const handleDeleteClick = (id) => {
         setAppointmentToDelete(id);
         setIsDeleteModalOpen(true);
     };

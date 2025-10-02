@@ -1,36 +1,9 @@
 // Fix: Moved all context logic here from types.ts and fixed bugs.
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import type { User, Patient, Treatment, Appointment } from '../types.js';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { MOCK_PATIENTS, AVAILABLE_TREATMENTS, MOCK_APPOINTMENTS, MOCK_USERS } from '../constants.js';
 import { db } from '../data/db.js';
 
-interface AppState {
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  currentUser: User | null;
-  users: User[];
-  patients: Patient[];
-  treatments: Treatment[];
-  appointments: Appointment[];
-}
-
-type Action =
-  | { type: 'LOGIN'; payload: User }
-  | { type: 'LOGOUT' }
-  | { type: 'SET_IS_LOADING'; payload: boolean }
-  | { type: 'SET_USERS_AND_TREATMENTS'; payload: { users: User[], treatments: Treatment[] } }
-  | { type: 'SET_PATIENTS_AND_APPOINTMENTS'; payload: { patients: Patient[], appointments: Appointment[] } }
-  | { type: 'ADD_USER'; payload: User }
-  | { type: 'DELETE_USER'; payload: string }
-  | { type: 'ADD_PATIENT'; payload: Patient }
-  | { type: 'UPDATE_PATIENT'; payload: Patient }
-  | { type: 'DELETE_PATIENT'; payload: string }
-  | { type: 'ADD_APPOINTMENT'; payload: Appointment }
-  | { type: 'UPDATE_APPOINTMENT'; payload: Appointment }
-  | { type: 'DELETE_APPOINTMENT'; payload: string }
-  | { type: 'DELETE_APPOINTMENTS_BULK'; payload: string[] };
-
-const initialState: AppState = {
+const initialState = {
     isLoading: true,
     isAuthenticated: false,
     currentUser: null,
@@ -41,7 +14,7 @@ const initialState: AppState = {
 };
 
 
-const appReducer = (state: AppState, action: Action): AppState => {
+const appReducer = (state, action) => {
   switch (action.type) {
     case 'SET_IS_LOADING':
       return { ...state, isLoading: action.payload };
@@ -116,12 +89,9 @@ const appReducer = (state: AppState, action: Action): AppState => {
   }
 };
 
-const AppContext = createContext<{
-  state: AppState;
-  dispatch: React.Dispatch<Action>;
-} | undefined>(undefined);
+const AppContext = createContext(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   useEffect(() => {
@@ -174,8 +144,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         dispatch({ type: 'SET_IS_LOADING', payload: true });
         try {
-            let patients: Patient[] = [];
-            let appointments: Appointment[] = [];
+            let patients = [];
+            let appointments = [];
             
             if (state.currentUser.role === 'admin') {
                 patients = await db.patients.toArray();

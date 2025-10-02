@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext.js';
 import { ToothIcon } from '../components/icons/ToothIcon.js';
 
-const Login: React.FC = () => {
+const Login = () => {
   const { state, dispatch } = useAppContext();
   const navigate = useNavigate();
   const [email, setEmail] = useState('admin@dentalflow.com');
   const [password, setPassword] = useState('1234');
   const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     const user = state.users.find(u => u.email === email && u.password === password);
     if (user) {

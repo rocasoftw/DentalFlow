@@ -1,16 +1,10 @@
-import Dexie, { type Table } from 'dexie';
-import type { User, Patient, Treatment, Appointment } from '../types.js';
+import Dexie from 'dexie';
 
 // FIX: Refactored to use direct Dexie instantiation instead of subclassing.
 // This common pattern resolves a TypeScript typing issue where methods from the 
 // parent Dexie class (like 'version' and 'transaction') were not being 
 // recognized on the subclass instance, causing errors during compilation.
-export const db = new Dexie('dentalFlowDB') as Dexie & {
-    users: Table<User>;
-    patients: Table<Patient>;
-    treatments: Table<Treatment>;
-    appointments: Table<Appointment>;
-};
+export const db = new Dexie('dentalFlowDB');
 
 db.version(1).stores({
     users: 'id, &email', // Primary key 'id' and unique index 'email'

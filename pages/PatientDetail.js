@@ -2,18 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext.js';
 import Odontogram from '../components/Odontogram.js';
-import type { Patient, Anamnesis, BillingRecord, ToothCondition, Treatment } from '../types.js';
 import { db } from '../data/db.js';
 import ConfirmationModal from '../components/ConfirmationModal.js';
 
-const AnamnesisFormField: React.FC<{
-    label: string,
-    name: keyof Anamnesis,
-    value: string,
-    placeholder: string,
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-    rows?: number
-}> = ({label, name, value, placeholder, onChange, rows = 3}) => (
+const AnamnesisFormField = ({label, name, value, placeholder, onChange, rows = 3}) => (
     <div>
         <label htmlFor={name} className="block text-sm font-semibold text-gray-800 mb-2">{label}</label>
         <textarea
@@ -28,12 +20,7 @@ const AnamnesisFormField: React.FC<{
     </div>
 );
 
-const AnamnesisToggleSwitch: React.FC<{
-    label: string,
-    name: keyof Anamnesis,
-    checked: boolean,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-}> = ({ label, name, checked, onChange }) => (
+const AnamnesisToggleSwitch = ({ label, name, checked, onChange }) => (
     <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
         <span className="font-semibold text-gray-800">{label}</span>
         <label htmlFor={name} className="relative inline-flex items-center cursor-pointer">
@@ -44,17 +31,17 @@ const AnamnesisToggleSwitch: React.FC<{
 );
 
 
-const AnamnesisForm: React.FC<{ anamnesis: Anamnesis, patientId: string, onSave: (patientId: string, data: { anamnesis: Anamnesis }) => void }> = ({ anamnesis, patientId, onSave }) => {
+const AnamnesisForm = ({ anamnesis, patientId, onSave }) => {
     const [formData, setFormData] = useState(anamnesis);
     const [showSuccess, setShowSuccess] = useState(false);
     
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e) => {
         const { name, value, type } = e.target;
-        const checked = (e.target as HTMLInputElement).checked;
+        const checked = e.target.checked;
         setFormData(prev => ({...prev, [name]: type === 'checkbox' ? checked : value}));
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         onSave(patientId, { anamnesis: formData });
         setShowSuccess(true);
@@ -128,18 +115,7 @@ const AnamnesisForm: React.FC<{ anamnesis: Anamnesis, patientId: string, onSave:
     );
 }
 
-const BillingFormInput: React.FC<{
-    label: string,
-    name: string,
-    type?: string,
-    value: string | number,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void,
-    children?: React.ReactNode,
-    placeholder?: string,
-    as?: 'input' | 'select' | 'textarea',
-    inputMode?: "none" | "text" | "tel" | "url" | "email" | "numeric" | "decimal" | "search",
-    rows?: number
-}> = 
+const BillingFormInput = 
 ({ label, name, type = 'text', value, onChange, children, placeholder, as = 'input', inputMode, rows }) => (
     <div>
         <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
@@ -179,12 +155,10 @@ const BillingFormInput: React.FC<{
 );
 
 
-const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatment[], patientId: string, onSave: (patientId: string, data: { billingRecords: BillingRecord[] }) => void }> = ({ billingRecords, treatments, patientId, onSave }) => {
+const BillingTab = ({ billingRecords, treatments, patientId, onSave }) => {
     
     const { state } = useAppContext();
     const { currentUser, users } = state;
-    type SortableBillingKeys = keyof BillingRecord | 'treatmentName' | 'balance';
-
 
     const initialFormState = {
         treatmentId: treatments[0]?.id || '',
@@ -194,10 +168,10 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
     };
     
     const [formData, setFormData] = useState(initialFormState);
-    const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
+    const [editingRecordId, setEditingRecordId] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
-    const [sortConfig, setSortConfig] = useState<{ key: SortableBillingKeys, direction: 'ascending' | 'descending' }>({ key: 'date', direction: 'descending' });
+    const [recordToDelete, setRecordToDelete] = useState(null);
+    const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'descending' });
 
 
     useEffect(() => {
@@ -234,26 +208,26 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
         });
     }, [billingRecords, sortConfig, treatments, users]);
 
-    const requestSort = (key: SortableBillingKeys) => {
-        let direction: 'ascending' | 'descending' = 'ascending';
+    const requestSort = (key) => {
+        let direction = 'ascending';
         if (sortConfig.key === key && sortConfig.direction === 'ascending') {
             direction = 'descending';
         }
         setSortConfig({ key, direction });
     };
 
-    const getSortIcon = (key: SortableBillingKeys) => {
+    const getSortIcon = (key) => {
         if (sortConfig.key !== key) return null;
         return sortConfig.direction === 'ascending' ? '▲' : '▼';
     };
 
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleFormChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleNumericInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNumericInputChange = (e) => {
         const { name, value } = e.target;
         let sanitizedValue = value.replace(/[^0-9.]/g, '');
         const parts = sanitizedValue.split('.');
@@ -286,7 +260,7 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
             );
             onSave(patientId, { billingRecords: updatedRecords });
         } else {
-            const newBilling: BillingRecord = {
+            const newBilling = {
                 id: `b${Date.now()}`,
                 patientId: patientId,
                 dentistId: currentUser.id,
@@ -301,7 +275,7 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
         setEditingRecordId(null);
     }
 
-    const handleEditClick = (recordId: string) => {
+    const handleEditClick = (recordId) => {
         setEditingRecordId(recordId);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -310,7 +284,7 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
         setEditingRecordId(null);
     };
 
-    const handleDeleteClick = (recordId: string) => {
+    const handleDeleteClick = (recordId) => {
         setRecordToDelete(recordId);
         setIsDeleteModalOpen(true);
     };
@@ -326,7 +300,7 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
     const totalPaid = billingRecords.reduce((sum, record) => sum + record.paidAmount, 0);
     const totalBalance = totalCost - totalPaid;
     
-    const SortableHeader: React.FC<{label: string; sortKey: SortableBillingKeys; className?: string}> = ({ label, sortKey, className = ''}) => (
+    const SortableHeader = ({ label, sortKey, className = ''}) => (
         <th className={`px-6 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer ${className}`} onClick={() => requestSort(sortKey)}>
             {label} <span className="text-xs">{getSortIcon(sortKey)}</span>
         </th>
@@ -445,8 +419,8 @@ const BillingTab: React.FC<{ billingRecords: BillingRecord[], treatments: Treatm
 };
 
 
-const PatientDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+const PatientDetail = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const { state, dispatch } = useAppContext();
     const patient = state.patients.find(p => p.id === id);
@@ -457,7 +431,7 @@ const PatientDetail: React.FC = () => {
         return <div className="p-6">Paciente no encontrado. <button onClick={() => navigate('/patients')} className="text-primary-600">Volver a la lista</button></div>;
     }
     
-    const handleUpdatePatient = async (patientId: string, data: Partial<Patient>) => {
+    const handleUpdatePatient = async (patientId, data) => {
         const patientToUpdate = state.patients.find(p => p.id === patientId);
         if (patientToUpdate) {
             const updatedPatient = { ...patientToUpdate, ...data };
@@ -471,7 +445,7 @@ const PatientDetail: React.FC = () => {
         }
     }
 
-    const handleToothFaceUpdate = (toothNumber: number, face: string, condition: ToothCondition) => {
+    const handleToothFaceUpdate = (toothNumber, face, condition) => {
         const newDentalState = JSON.parse(JSON.stringify(patient.dentalState)); // Deep copy
         if (!newDentalState[toothNumber]) {
             newDentalState[toothNumber] = {};
@@ -483,7 +457,7 @@ const PatientDetail: React.FC = () => {
         handleUpdatePatient(patient.id, { dentalState: newDentalState });
     };
 
-    const TabButton: React.FC<{tabName: string; label: string}> = ({tabName, label}) => (
+    const TabButton = ({tabName, label}) => (
         <button
             onClick={() => setActiveTab(tabName)}
             className={`px-4 py-2 text-sm font-medium rounded-md ${
@@ -530,8 +504,8 @@ const PatientDetail: React.FC = () => {
                 </div>
                 <div>
                     {activeTab === 'odontogram' && <Odontogram dentalState={patient.dentalState} onToothFaceClick={handleToothFaceUpdate}/>}
-                    {activeTab === 'anamnesis' && <AnamnesisForm anamnesis={patient.anamnesis} patientId={patient.id} onSave={handleUpdatePatient as any}/>}
-                    {activeTab === 'billing' && <BillingTab billingRecords={patient.billingRecords} treatments={state.treatments} patientId={patient.id} onSave={handleUpdatePatient as any}/>}
+                    {activeTab === 'anamnesis' && <AnamnesisForm anamnesis={patient.anamnesis} patientId={patient.id} onSave={handleUpdatePatient}/>}
+                    {activeTab === 'billing' && <BillingTab billingRecords={patient.billingRecords} treatments={state.treatments} patientId={patient.id} onSave={handleUpdatePatient}/>}
                 </div>
             </div>
         </div>
