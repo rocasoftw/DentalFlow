@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext.tsx';
-import Odontogram from '../components/Odontogram.tsx';
-import type { Patient, Anamnesis, BillingRecord, ToothCondition, Treatment } from '../types.ts';
-import { db } from '../data/db.ts';
-import ConfirmationModal from '../components/ConfirmationModal.tsx';
+import { useAppContext } from '../context/AppContext.js';
+import Odontogram from '../components/Odontogram.js';
+import type { Patient, Anamnesis, BillingRecord, ToothCondition, Treatment } from '../types.js';
+import { db } from '../data/db.js';
+import ConfirmationModal from '../components/ConfirmationModal.js';
 
 const AnamnesisFormField: React.FC<{
     label: string,

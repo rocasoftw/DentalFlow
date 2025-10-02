@@ -1,15 +1,15 @@
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppProvider, useAppContext } from './context/AppContext.tsx';
-import Login from './pages/Login.tsx';
-import DashboardLayout from './components/layout/DashboardLayout.tsx';
-import Dashboard from './pages/Dashboard.tsx';
-import PatientsList from './pages/PatientsList.tsx';
-import PatientDetail from './pages/PatientDetail.tsx';
-import Reports from './pages/Reports.tsx';
-import PatientForm from './pages/PatientForm.tsx';
-import AppointmentsCalendar from './pages/AppointmentsCalendar.tsx';
-import Users from './pages/Users.tsx';
+import { AppProvider, useAppContext } from './context/AppContext.js';
+import Login from './pages/Login.js';
+import DashboardLayout from './components/layout/DashboardLayout.js';
+import Dashboard from './pages/Dashboard.js';
+import PatientsList from './pages/PatientsList.js';
+import PatientDetail from './pages/PatientDetail.js';
+import Reports from './pages/Reports.js';
+import PatientForm from './pages/PatientForm.js';
+import AppointmentsCalendar from './pages/AppointmentsCalendar.js';
+import Users from './pages/Users.js';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { state } = useAppContext();

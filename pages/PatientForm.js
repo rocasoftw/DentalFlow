@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext.tsx';
-import type { Patient } from '../types.ts';
-import { db } from '../data/db.ts';
+import { useAppContext } from '../context/AppContext.js';
+import type { Patient } from '../types.js';
+import { db } from '../data/db.js';
 
 const FormField: React.FC<{
     label: string,

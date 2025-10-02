@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { useAppContext } from '../context/AppContext.tsx';
+import { useAppContext } from '../context/AppContext.js';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import type { BillingRecord } from '../types.ts';
+import type { BillingRecord } from '../types.js';
 
 const Reports: React.FC = () => {
     const { state } = useAppContext();
@@ -133,7 +133,10 @@ const Reports: React.FC = () => {
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
-                            <Tooltip formatter={(value, name) => [`${value} (${(filteredRecords.length > 0 ? (value as number / filteredRecords.length * 100) : 0).toFixed(1)}%)`, name]} />
+                            <Tooltip formatter={(value, name) => {
+                                const percentage = filteredRecords.length > 0 ? ((value / filteredRecords.length) * 100) : 0;
+                                return [`${value} (${percentage.toFixed(1)}%)`, name];
+                            }} />
                             <Legend />
                         </PieChart>
                     </ResponsiveContainer>
