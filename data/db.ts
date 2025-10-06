@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { User, Patient, Treatment, Appointment } from '../types';
+import type { User, Patient, Treatment, Appointment } from '../types.ts';
 
 // FIX: Refactored to use direct Dexie instantiation instead of subclassing.
 // This common pattern resolves a TypeScript typing issue where methods from the 

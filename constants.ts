@@ -1,4 +1,3 @@
-
 import type { User, Patient, Treatment, DentalState, ToothCondition, Appointment } from './types.ts';
 
 export const MOCK_USERS: User[] = [

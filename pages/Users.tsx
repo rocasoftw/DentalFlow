@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useAppContext } from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.tsx';
 import type { User } from '../types.ts';
 import { db } from '../data/db.ts';
-import ConfirmationModal from '../components/ConfirmationModal.js';
+import ConfirmationModal from '../components/ConfirmationModal.tsx';
 
 const Users: React.FC = () => {
   const { state, dispatch } = useAppContext();
