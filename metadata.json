@@ -1,0 +1,5 @@
+{
+  "name": "DentalApp",
+  "description": "A dental practice management application for administrators and users, designed to run on GitHub Pages. It features role-based access control for managing patients and appointments.",
+  "requestFramePermissions": []
+}
